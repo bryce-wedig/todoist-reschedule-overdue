@@ -26,7 +26,7 @@ pip install todoist-api-python
   "integration_page_id": "------------------------"
 }
 ```
-where the Notion page IDs can be retrieved from its URL
+where the Notion page's ID can be retrieved from its URL
 - Schedule the script with `cron`: for example, to execute every night at 12:01am,
 
 ```
