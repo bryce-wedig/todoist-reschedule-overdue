@@ -16,7 +16,7 @@ pip install todoist-api-python
 ![notion_integration_page](images/notion_integration_page.png)
 
 - Make sure the integration user has the appropriate permissions for this page
-- Create `constants_ads_notion_integration.json` in script directory that looks like
+- Create `constants_todoist_reschedule_overdue.json` in script directory that looks like
 ```
 {
   "todoist_api_token": "------------------------",
