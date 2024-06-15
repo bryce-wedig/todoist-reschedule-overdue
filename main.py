@@ -2,6 +2,7 @@ import datetime
 import sys
 
 from todoist_api_python.api import TodoistAPI
+from tqdm import tqdm
 
 import utils
 from notion_helper import get_notion_header, is_active_in_notion, post_status_to_notion
@@ -42,7 +43,7 @@ try:
 
     # reschedule overdue tasks
     rescheduled_tasks = []
-    for each in task_list:
+    for each in tqdm(task_list):
         if each['date'] == str(yesterday):
             overdue_tasks += 1
             update_task_due_date(todoist_header, todoist_api_version, today, each['id'], each['string'],
