@@ -9,7 +9,7 @@ from notion_helper import get_notion_header, is_active_in_notion, post_status_to
 from todoist_helper import build_task_list, update_task_due_date, get_todoist_header
 
 # set to true for IDE execution
-local_execution = True
+local_execution = False
 
 if local_execution:
     json = utils.read_json('constants_todoist_reschedule_overdue.json')
@@ -34,21 +34,23 @@ try:
 
     today = datetime.date.today()
     yesterday = str(today - datetime.timedelta(days=1))
-    overdue_tasks = 0
 
     api = TodoistAPI(todoist_api_token)
 
     # retrieve all tasks from Todoist
     task_list = build_task_list(todoist_header, todoist_api_version)
 
+    # identify overdue tasks
+    overdue_tasks = []
+    for task in task_list:
+        if task['date'] == str(yesterday):
+            overdue_tasks.append(task)
+    
     # reschedule overdue tasks
     rescheduled_tasks = []
-    for each in tqdm(task_list):
-        if each['date'] == str(yesterday):
-            overdue_tasks += 1
-            update_task_due_date(todoist_header, todoist_api_version, today, each['id'], each['string'],
-                                 each['is_recurring'])
-            rescheduled_tasks.append(each)
+    for task in tqdm(overdue_tasks):
+        update_task_due_date(todoist_header, todoist_api_version, today, task['id'], task['string'], task['is_recurring'])
+        rescheduled_tasks.append(task)
 
     print('Rescheduled ' + str(len(rescheduled_tasks)) + ' overdue task(s)')
 
