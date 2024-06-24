@@ -48,7 +48,7 @@ try:
     
     # reschedule overdue tasks
     rescheduled_tasks = []
-    for task in tqdm(overdue_tasks):
+    for task in tqdm(overdue_tasks, disable=not local_execution):
         update_task_due_date(todoist_header, todoist_api_version, today, task['id'], task['string'], task['is_recurring'])
         rescheduled_tasks.append(task)
 
