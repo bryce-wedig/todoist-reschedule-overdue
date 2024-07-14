@@ -14,7 +14,7 @@ local_execution = False
 if local_execution:
     json = utils.read_json('constants_todoist_reschedule_overdue.json')
 else:
-    json = utils.read_json('/home/ubuntu/scripts/todoist-reschedule-overdue/constants_todoist_reschedule_overdue.json')
+    json = utils.read_json('/home/ubuntu/todoist-reschedule-overdue/constants_todoist_reschedule_overdue.json')
 
 # retrieve values from json file
 todoist_api_token = json['todoist_api_token']
