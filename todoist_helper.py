@@ -6,11 +6,13 @@ import todoist_client
 def build_task_list(auth_todoist, todoist_api_version):
     # get all tasks
     all_tasks_response = todoist_client.get_all_tasks(auth_todoist, todoist_api_version)
+    if all_tasks_response.status_code != 200:
+        raise Exception(f"Todoist API error {all_tasks_response.status_code}: {all_tasks_response.text!r}")
     all_tasks_dict = json.loads(all_tasks_response.text)
 
     task_list = []
 
-    for each in list(all_tasks_dict):
+    for each in all_tasks_dict.get('results', all_tasks_dict):
         task = {'id': each['id']}
         due_dict = each.get('due')
 
@@ -27,7 +29,7 @@ def build_task_list(auth_todoist, todoist_api_version):
         task['project_id'] = each['project_id']
         task['section_id'] = each['section_id']
         task['content'] = each['content']
-        task['created_at'] = each['created_at']
+        task['created_at'] = each['added_at']
 
         task_list.append(task)
 
