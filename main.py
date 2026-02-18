@@ -1,4 +1,5 @@
 import datetime
+import logging
 import sys
 
 from todoist_api_python.api import TodoistAPI
@@ -7,6 +8,8 @@ from tqdm import tqdm
 import utils
 from notion_helper import get_notion_header, is_active_in_notion, post_status_to_notion
 from todoist_helper import build_task_list, update_task_due_date, get_todoist_header
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 # set to true for IDE execution
 local_execution = False
@@ -39,12 +42,14 @@ try:
 
     # retrieve all tasks from Todoist
     task_list = build_task_list(todoist_header, todoist_api_version)
+    logging.info('Retrieved ' + str(len(task_list)) + ' tasks from Todoist')
 
     # identify overdue tasks
     overdue_tasks = []
     for task in task_list:
         if task['date'] == str(yesterday):
             overdue_tasks.append(task)
+    logging.info('Identified ' + str(len(overdue_tasks)) + ' overdue task(s)')
     
     # reschedule overdue tasks
     rescheduled_tasks = []
@@ -52,10 +57,10 @@ try:
         update_task_due_date(todoist_header, todoist_api_version, today, task['id'], task['string'], task['is_recurring'])
         rescheduled_tasks.append(task)
 
-    print('Rescheduled ' + str(len(rescheduled_tasks)) + ' overdue task(s)')
+    logging.info('Rescheduled ' + str(len(rescheduled_tasks)) + ' overdue task(s)')
 
     # log result in Notion
     post_status_to_notion(notion_header, integration_page_id, True)
 except Exception as e:
-    print(e)
+    logging.error(e)
     post_status_to_notion(notion_header, integration_page_id, False)
